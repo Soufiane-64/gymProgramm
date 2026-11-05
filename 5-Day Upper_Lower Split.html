@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>5-Day Upper/Lower Split</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0e1014;--card:#171a21;--line:#262b35;--text:#f2f4f8;--mute:#8d96a6;
+  --acc:#ff5a36;--acc-ink:#fff;--soft:rgba(255,255,255,.05);
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:dark;
+}
+@media (prefers-color-scheme:light){
+  :root:not([data-theme="dark"]){--bg:#f4f1ec;--card:#fff;--line:#e4dfd6;--text:#16181d;--mute:#6b7280;--soft:rgba(0,0,0,.04);color-scheme:light}
+}
+:root[data-theme="light"]{--bg:#f4f1ec;--card:#fff;--line:#e4dfd6;--text:#16181d;--mute:#6b7280;--soft:rgba(0,0,0,.04);color-scheme:light}
+:root[data-theme="dark"]{--bg:#0e1014;--card:#171a21;--line:#262b35;--text:#f2f4f8;--mute:#8d96a6;--soft:rgba(255,255,255,.05);color-scheme:dark}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;min-height:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px 48px}
+header{padding:28px 0 18px}
+.eyebrow{font:500 11px/1 "IBM Plex Mono",ui-monospace,monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--acc)}
+h1{margin:10px 0 8px;font-size:clamp(30px,9vw,44px);line-height:1;letter-spacing:-.03em}
+h1 span{color:var(--acc)}
+.sub{margin:0;color:var(--mute);font-size:14px;line-height:1.5}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0 0}
+.fact{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 10px;text-align:center}
+.fact b{display:block;font-size:20px;letter-spacing:-.02em}
+.fact small{color:var(--mute);font-size:11px}
+.note{margin:14px 0 0;padding:12px 14px;border-radius:14px;background:var(--soft);border:1px dashed var(--line);font-size:13px;line-height:1.5;color:var(--mute)}
+.note b{color:var(--text)}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);margin:0 -16px;padding:10px 16px;border-bottom:1px solid var(--line)}
+.tabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--mute);border-radius:999px;padding:9px 14px;font:500 13px "Space Grotesk",sans-serif;cursor:pointer;display:flex;gap:8px;align-items:center;transition:.15s}
+.tab i{font:500 11px "IBM Plex Mono",monospace;font-style:normal;opacity:.7}
+.tab[aria-selected="true"]{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.tab[aria-selected="true"] i{opacity:.85}
+.day{display:none;padding-top:20px}
+.day.on{display:block;animation:in .25s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.dayhead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:12px}
+.dayhead h2{margin:0;font-size:24px;letter-spacing:-.02em;line-height:1.1}
+.dayhead p{margin:4px 0 0;color:var(--acc);font:500 11px "IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase}
+.prog{font:500 12px "IBM Plex Mono",monospace;color:var(--mute);white-space:nowrap}
+.bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden;margin-bottom:16px}
+.bar div{height:100%;width:0;background:var(--acc);transition:width .25s}
+.ex{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px;color:inherit;font:inherit;cursor:pointer;transition:.15s;-webkit-tap-highlight-color:transparent}
+.ex:active{transform:scale(.99)}
+.num{flex:0 0 auto;width:30px;height:30px;border-radius:10px;background:var(--soft);display:grid;place-items:center;font:500 12px "IBM Plex Mono",monospace;color:var(--mute)}
+.info{flex:1;min-width:0}
+.name{font-weight:500;font-size:16px;line-height:1.25}
+.meta{margin-top:6px;display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:500 12px "IBM Plex Mono",monospace;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:3px 8px}
+.chip.heavy{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.chip.back{border-color:var(--acc);color:var(--acc)}
+.tip{margin-top:6px;font-size:12px;color:var(--mute)}
+.chk{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;transition:.15s}
+.chk svg{width:14px;height:14px;opacity:0;stroke:var(--acc-ink);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.ex.done{opacity:.55}
+.ex.done .name{text-decoration:line-through}
+.ex.done .chk{background:var(--acc);border-color:var(--acc)}
+.ex.done .chk svg{opacity:1}
+.reset{display:block;margin:20px auto 0;background:none;border:1px solid var(--line);color:var(--mute);border-radius:999px;padding:9px 16px;font:500 12px "Space Grotesk",sans-serif;cursor:pointer}
+.week{margin-top:28px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.week div{text-align:center;font:500 10px "IBM Plex Mono",monospace;color:var(--mute);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 2px;line-height:1.5}
+.week div b{display:block;color:var(--text);font-size:12px}
+.week .up b{color:var(--acc)}
+@media (min-width:600px){.ex{padding:16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Training program</div>
+    <h1>5-Day <span>Upper / Lower</span> Split</h1>
+    <p class="sub">3 upper days and 2 lower days a week, so total volume stays evenly spread and no session drags on.</p>
+    <div class="facts">
+      <div class="fact"><b>5</b><small>days / week</small></div>
+      <div class="fact"><b>3 / 2</b><small>upper / lower</small></div>
+      <div class="fact"><b>1–2</b><small>moves per muscle</small></div>
+    </div>
+    <div class="note"><b>Heavy + back-off:</b> main compound lifts get 2 heavy sets (5–8 reps), then 1 lighter back-off set (8–12 reps).</div>
+  </header>
+</div>
+<nav><div class="wrap" style="padding:0"><div class="tabs" role="tablist" id="tabs"></div></div></nav>
+<div class="wrap">
+  <main id="days"></main>
+  <div class="week" id="week"></div>
+  <button class="reset" id="reset">Reset today’s checks</button>
+</div>
+
+<script>
+const H="h",B="b";
+const days=[
+ {t:"Upper 1",s:"Chest focus",u:1,ex:[
+  ["Bench Press","2×5–8","+1×8–12 back-off"],
+  ["Incline Bench Press","3×8–12"],
+  ["Weighted Pull-Ups","3×8–12","Or bodyweight / assisted"],
+  ["Straight-Arm Pull-Downs","3×12–15"],
+  ["Barbell Strict Curl","3×8–10"],
+  ["Hammer Curls","3×12–20"],
+  ["Skull Crushers","3×12–15"],
+  ["Lateral Raises","3×12–20"],
+  ["Bent-Over Rear Delt Flies","3×12–20"]]},
+ {t:"Lower 1",s:"Quad focus",ex:[
+  ["Barbell Squats","2×5–8","+1×8–12 back-off"],
+  ["Lunges","3×12–20"],
+  ["Leg Extensions","3×12–20"],
+  ["Romanian Deadlifts","3×8–12"],
+  ["Calf Raises","3×8–12"]]},
+ {t:"Upper 2",s:"Back focus",u:1,ex:[
+  ["Lat Pull-Downs","3×8–12"],
+  ["Barbell Rows","3×8–12"],
+  ["Overhead Press","3×8–12"],
+  ["Face Pulls","3×12–20"],
+  ["Bench Press","2×5–8","+1×8–12 back-off"],
+  ["Dumbbell Flies","3×12–20"],
+  ["Preacher Curls","3×12–15"],
+  ["Cable Hammer Curls","3×12–15"],
+  ["Cable Push-Downs","3×8–12","Can superset with Skull Crushers"],
+  ["Skull Crushers","3×8–12"]]},
+ {t:"Lower 2",s:"Glute & hamstring focus",ex:[
+  ["Hip Thrusts","3×8–12"],
+  ["Good Mornings","3×8–12"],
+  ["Hamstring Curls","3×15–20"],
+  ["Leg Press","3×12–20"],
+  ["Glute Kickbacks","3×12–20"],
+  ["Calf Raises","3×15–20"]]},
+ {t:"Upper 3",s:"Shoulder & arm focus",u:1,ex:[
+  ["Barbell Strict Curl","3×8–10"],
+  ["Concentration Curls","3×12–20"],
+  ["Overhead Press","2×5–8","+1×8–12 back-off"],
+  ["Lateral Raises","3×12–20"],
+  ["Incline Bench Press","3×12–15"],
+  ["Cable Flies","3×12–20"],
+  ["Meadows Rows","3×12–15"],
+  ["Seated Cable Rows","3×12–15"],
+  ["Triceps Push-Down","3×12–15"]]}
+];
+const store={get(){try{return JSON.parse(localStorage.getItem("split-checks")||"{}")}catch(e){return{}}},
+ set(v){try{localStorage.setItem("split-checks",JSON.stringify(v))}catch(e){}}};
+let checks=store.get(), cur=0;
+const tabs=document.getElementById("tabs"), box=document.getElementById("days"), week=document.getElementById("week");
+const tick='<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
+
+days.forEach((d,i)=>{
+  const b=document.createElement("button");
+  b.className="tab";b.role="tab";b.innerHTML=d.t+"<i>D"+(i+1)+"</i>";
+  b.onclick=()=>show(i,true);tabs.appendChild(b);
+
+  const s=document.createElement("section");s.className="day";
+  let h='<div class="dayhead"><div><h2>'+d.t+'</h2><p>'+d.s+'</p></div><div class="prog" id="p'+i+'"></div></div><div class="bar"><div id="b'+i+'"></div></div>';
+  d.ex.forEach((e,j)=>{
+    const [sets,reps]=[e[1].split("×")[0],e[1].split("×")[1]];
+    const heavy=e[2]&&e[2].startsWith("+");
+    h+='<button class="ex" data-d="'+i+'" data-e="'+j+'"><span class="num">'+(j+1)+'</span><span class="info"><div class="name">'+e[0]+'</div><div class="meta"><span class="chip'+(heavy?' heavy':'')+'">'+sets+' × '+reps+'</span>'+(heavy?'<span class="chip back">'+e[2]+'</span>':'')+'</div>'+(e[2]&&!heavy?'<div class="tip">'+e[2]+'</div>':'')+'</span><span class="chk">'+tick+'</span></button>';
+  });
+  s.innerHTML=h;box.appendChild(s);
+
+  const w=document.createElement("div");if(d.u)w.className="up";
+  w.innerHTML="<b>D"+(i+1)+"</b>"+(d.u?"Upper":"Lower")+" "+d.t.slice(-1);
+  w.onclick=()=>show(i,true);week.appendChild(w);
+});
+
+function paint(){
+  days.forEach((d,i)=>{
+    let n=0;
+    document.querySelectorAll('.ex[data-d="'+i+'"]').forEach(el=>{
+      const on=!!checks[i+"-"+el.dataset.e];el.classList.toggle("done",on);if(on)n++;
+    });
+    document.getElementById("p"+i).textContent=n+" / "+d.ex.length;
+    document.getElementById("b"+i).style.width=(n/d.ex.length*100)+"%";
+  });
+}
+function show(i,scroll){
+  cur=i;
+  document.querySelectorAll(".day").forEach((el,k)=>el.classList.toggle("on",k===i));
+  document.querySelectorAll(".tab").forEach((el,k)=>{el.setAttribute("aria-selected",k===i);if(k===i)el.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"})});
+  if(scroll)window.scrollTo({top:document.querySelector("nav").offsetTop-(parseInt(getComputedStyle(document.documentElement).paddingTop)||0),behavior:"smooth"});
+}
+box.addEventListener("click",ev=>{
+  const el=ev.target.closest(".ex");if(!el)return;
+  const k=el.dataset.d+"-"+el.dataset.e;
+  if(checks[k])delete checks[k];else checks[k]=1;
+  store.set(checks);paint();
+});
+document.getElementById("reset").onclick=()=>{
+  Object.keys(checks).forEach(k=>{if(k.startsWith(cur+"-"))delete checks[k]});
+  store.set(checks);paint();
+};
+paint();show(0,false);
+</script>
+</body>
+</html>
